@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 
-const countStudents = (path) => {
+function countStudents(path) {
   let data;
 
   try {
