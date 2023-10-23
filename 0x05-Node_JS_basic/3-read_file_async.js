@@ -17,10 +17,10 @@ const countStudents = (path) => {
         const sweStudents = students.filter((student) => student.includes('SWE'));
         console.log(`Number of students in CS: ${csStudents.length}. List: ${csStudents.join(', ')}`);
         console.log(`Number of students in SWE: ${sweStudents.length}. List: ${sweStudents.join(', ')}`);
-        }
-            resolve();
-        });
-    });
+    }
+      resolve();
+      });
+  });
 };
 
 module.exports = countStudents;
