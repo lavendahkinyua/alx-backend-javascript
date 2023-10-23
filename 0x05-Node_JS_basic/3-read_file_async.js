@@ -21,6 +21,6 @@ function countStudents(path) {
       resolve();
     });
   });
-};
+}
 
 module.exports = countStudents;
