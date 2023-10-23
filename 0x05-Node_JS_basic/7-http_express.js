@@ -23,7 +23,7 @@ const countStudents = (dataPath) => new Promise((resolve, reject) => {
           0,
           dbFieldNames.length - 1,
         );
-  
+
         for (const line of fileLines.slice(1)) {
           const studentRecord = line.split(',');
           const studentPropValues = studentRecord.slice(
@@ -31,61 +31,61 @@ const countStudents = (dataPath) => new Promise((resolve, reject) => {
             studentRecord.length - 1,
           );
           const field = studentRecord[studentRecord.length - 1];
-            if (!Object.keys(studentGroups).includes(field)) {
-              studentGroups[field] = [];
-            }
-            const studentEntries = studentPropNames.map((propName, idx) => [
-              propName,
-              studentPropValues[idx],
-            ]);
-            studentGroups[field].push(Object.fromEntries(studentEntries));
+          if (!Object.keys(studentGroups).includes(field)) {
+            studentGroups[field] = [];
           }
-  
-          const totalStudents = Object.values(studentGroups).reduce(
-            (pre, cur) => (pre || []).length + cur.length,
-          );
-          reportParts.push(`Number of students: ${totalStudents}`);
-          for (const [field, group] of Object.entries(studentGroups)) {
-            reportParts.push([
-              `Number of students in ${field}: ${group.length}.`,
-              'List:',
-              group.map((student) => student.firstname).join(', '),
-            ].join(' '));
-          }
-          resolve(reportParts.join('\n'));
+          const studentEntries = studentPropNames.map((propName, idx) => [
+            propName,
+            studentPropValues[idx],
+          ]);
+          studentGroups[field].push(Object.fromEntries(studentEntries));
         }
-      });
-    }
-  });
+
+        const totalStudents = Object.values(studentGroups).reduce(
+          (pre, cur) => (pre || []).length + cur.length,
+        );
+        reportParts.push(`Number of students: ${totalStudents}`);
+        for (const [field, group] of Object.entries(studentGroups)) {
+          reportParts.push([
+            `Number of students in ${field}: ${group.length}.`,
+            'List:',
+            group.map((student) => student.firstname).join(', '),
+          ].join(' '));
+        }
+        resolve(reportParts.join('\n'));
+      }
+    });
+  }
+});
   
-  app.get('/', (_, res) => {
-    res.send('Hello Holberton School!');
-  });
+app.get('/', (_, res) => {
+  res.send('Hello Holberton School!');
+});
+
+app.get('/students', (_, res) => {
+  const responseParts = ['This is the list of our students'];
   
-  app.get('/students', (_, res) => {
-    const responseParts = ['This is the list of our students'];
+  countStudents(database)
+    .then((report) => {
+      responseParts.push(report);
+      const responseText = responseParts.join('\n');
+      res.setHeader('Content-Type', 'text/plain');
+      res.setHeader('Content-Length', responseText.length);
+      res.statusCode = 200;
+      res.write(Buffer.from(responseText));
+    })
+    .catch((err) => {
+      responseParts.push(err instanceof Error ? err.message : err.toString());
+      const responseText = responseParts.join('\n');
+      res.setHeader('Content-Type', 'text/plain');
+      res.setHeader('Content-Length', responseText.length);
+      res.statusCode = 200;
+      res.write(Buffer.from(responseText));
+    });
+});
   
-    countStudents(database)
-      .then((report) => {
-        responseParts.push(report);
-        const responseText = responseParts.join('\n');
-        res.setHeader('Content-Type', 'text/plain');
-        res.setHeader('Content-Length', responseText.length);
-        res.statusCode = 200;
-        res.write(Buffer.from(responseText));
-      })
-      .catch((err) => {
-        responseParts.push(err instanceof Error ? err.message : err.toString());
-        const responseText = responseParts.join('\n');
-        res.setHeader('Content-Type', 'text/plain');
-        res.setHeader('Content-Length', responseText.length);
-        res.statusCode = 200;
-        res.write(Buffer.from(responseText));
-      });
-  });
+app.listen(PORT, () => {
+  console.log(`Server listening on PORT ${PORT}`);
+});
   
-  app.listen(PORT, () => {
-    console.log(`Server listening on PORT ${PORT}`);
-  });
-  
-  module.exports = app;
+module.exports = app;
