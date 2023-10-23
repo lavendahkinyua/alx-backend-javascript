@@ -1,6 +1,6 @@
-/** 
+/**
  * creating a small HTTP server using Node's HTTP module
- * 
+ *
  */
 const http = require('http');
 
