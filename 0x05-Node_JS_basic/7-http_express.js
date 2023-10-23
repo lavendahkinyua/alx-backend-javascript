@@ -57,14 +57,14 @@ const countStudents = (dataPath) => new Promise((resolve, reject) => {
     });
   }
 });
-  
+
 app.get('/', (_, res) => {
   res.send('Hello Holberton School!');
 });
 
 app.get('/students', (_, res) => {
   const responseParts = ['This is the list of our students'];
-  
+
   countStudents(database)
     .then((report) => {
       responseParts.push(report);
@@ -83,9 +83,9 @@ app.get('/students', (_, res) => {
       res.write(Buffer.from(responseText));
     });
 });
-  
+
 app.listen(PORT, () => {
   console.log(`Server listening on PORT ${PORT}`);
 });
-  
+
 module.exports = app;
