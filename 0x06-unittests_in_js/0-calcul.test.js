@@ -1,5 +1,5 @@
 const assert = require('assert');
-const calculateNumber = require('./0-calcul');
+const calculateNumber = require('./0-calcul').default;
 
 describe('calculateNumber', function () {
   describe('Two Integers', function () {
