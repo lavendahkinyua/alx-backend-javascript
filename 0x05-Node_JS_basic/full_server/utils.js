@@ -4,7 +4,6 @@ import fs from 'fs';
  * function called readDatabase
  * reads database asycnronously
  * return promise
- * 
  */
 
 const readDatabase = (Path) => new Promise((resolve, reject) => {
